@@ -1,0 +1,29 @@
+# temp files
+*.o
+*.d
+*.swp
+
+# texts and executables
+*.txt
+*.exe
+
+# data files
+*.tpl
+*.tgt
+*.fasta
+
+# subdirectories
+required_tgt/
+required_tpl/
+
+# documents
+doc/
+!doc/*.tex
+
+# zip files
+*.zip
+
+# miscs
+tags
+tag
+*.py

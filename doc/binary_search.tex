@@ -1,0 +1,123 @@
+\documentclass{article}
+\usepackage{amsmath,amsfonts,amsthm,amssymb}
+\usepackage{setspace}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage{extramarks}
+\usepackage{chngpage}
+\usepackage{soul,color}
+\usepackage{graphicx,float,wrapfig}
+\newcommand{\Class}{HCSearch Framework}
+\newcommand{\ClassInstructor}{Andrew C. Yao}
+
+% Homework Specific Information. Change it to your own
+\newcommand{\Title}{Search Space}
+\newcommand{\DueDate}{Mar 1, 2008}
+\newcommand{\StudentName}{Crick Wu}
+\newcommand{\StudentClass}{J60}
+\newcommand{\StudentNumber}{2006010001}
+
+% In case you need to adjust margins:
+\topmargin=-0.45in      %
+\evensidemargin=0in     %
+\oddsidemargin=0in      %
+\textwidth=6.5in        %
+\textheight=9.0in       %
+\headsep=0.25in         %
+
+% Setup the header and footer
+\pagestyle{fancy}                                                       %
+\lhead{\StudentName}                                                 %
+\chead{\Title}  %
+\rhead{\firstxmark}                                                     %
+\lfoot{\lastxmark}                                                      %
+\cfoot{}                                                                %
+\rfoot{Page\ \thepage\ of\ \protect\pageref{LastPage}}                          %
+\renewcommand\headrulewidth{0.4pt}                                      %
+\renewcommand\footrulewidth{0.4pt}                                      %
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Some tools
+\newcommand{\enterProblemHeader}[1]{\nobreak\extramarks{#1}{#1 continued on next page\ldots}\nobreak%
+                                    \nobreak\extramarks{#1 (continued)}{#1 continued on next page\ldots}\nobreak}%
+\newcommand{\exitProblemHeader}[1]{\nobreak\extramarks{#1 (continued)}{#1 continued on next page\ldots}\nobreak%
+                                   \nobreak\extramarks{#1}{}\nobreak}%
+
+\newcommand{\homeworkProblemName}{}%
+\newcounter{homeworkProblemCounter}%
+\newenvironment{homeworkProblem}[1][Problem \arabic{homeworkProblemCounter}]%
+  {\stepcounter{homeworkProblemCounter}%
+   \renewcommand{\homeworkProblemName}{#1}%
+   \section*{\homeworkProblemName}%
+   \enterProblemHeader{\homeworkProblemName}}%
+  {\exitProblemHeader{\homeworkProblemName}}%
+
+\newcommand{\homeworkSectionName}{}%
+\newlength{\homeworkSectionLabelLength}{}%
+\newenvironment{homeworkSection}[1]%
+  {% We put this space here to make sure we're not connected to the above.
+
+   \renewcommand{\homeworkSectionName}{#1}%
+   \settowidth{\homeworkSectionLabelLength}{\homeworkSectionName}%
+   \addtolength{\homeworkSectionLabelLength}{0.25in}%
+   \changetext{}{-\homeworkSectionLabelLength}{}{}{}%
+   \subsection*{\homeworkSectionName}%
+   \enterProblemHeader{\homeworkProblemName\ [\homeworkSectionName]}}%
+  {\enterProblemHeader{\homeworkProblemName}%
+
+   % We put the blank space above in order to make sure this margin
+   % change doesn't happen too soon.
+   \changetext{}{+\homeworkSectionLabelLength}{}{}{}}%
+
+\newcommand{\Answer}{\ \\\textbf{Answer:} }
+\newcommand{\Acknowledgement}[1]{\ \\{\bf Acknowledgement:} #1}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Make title
+\title{\textmd{\bf \Class: \Title}}
+\date{}
+\author{\textbf{\StudentName}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+\begin{spacing}{1.1}
+\maketitle \thispagestyle{empty}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Begin edit from here
+\section{Current method for space searching}
+At present I just use a binary-search like method to explore the space.
+Denote the template to be string $s$ and the target to be string $t$. My method works as follows:
+\begin{enumerate}
+  \item Find $t$'s middle residue, say ($t[|t|/2]$). Suppose its current aligned residue in $s$ is $s[i]$.
+  \item Try aligning $t[|t|/2]$ with residues in $s$ which is within the neighbor of a fixed size (like $4$). That is with residues $s[i-4]\dots s[i+4]$ respectively.
+  \item We then fix this pair, and realign the residues on the two sides of the fixed pair. That is, if $t[|t|/2]$ is paired with $s[i-k]$, we run a DP on sequences between $s[1]\dots s[i-k]$ and $t[1]\dots t[|t|/2-1]$; and sequences between $s[i-k+1]\dots s[|s|]$ and $t[|t|/2+1]\dots t[|t|]$.
+  \item We then select out the best alignment (which is the one that has the most number of common aligned pairs with the ``real'' alignment (structure-based alignment)), and repeat the whole process.
+\end{enumerate}
+
+\section{Points to note}
+\begin{enumerate}
+  \item We need to note that even if we align a residue to a correct correspondence in the algorithm, we may not select it as the best alignment in the iteration. This results from the fact that the realignment in each iteration is based on a local alignment DP, the resulted path of which may not overlap the path of the previous whole sequences' DP. We can call it ``inconsistency''.
+
+      e.g. For alignment $[AB_CD,_EC_D]$, if we fix pair $C$ against $C$. We may not still require the first half's alignment to be $[AB,_E]$ by running a local DP for $AB$ and $E$.
+  \item Based on the statement, it may not generate a perfect alignment from some initial alignment. And it may be useful to limit the depth of the binary modification.
+  \item The ``window size'' which an alignment is allowed to move also matters. Actually with very bad initial alignment, it may require a size of around $18$.
+\end{enumerate}
+\section{Possible improvement}
+As for the problem of inconsistency between local alignment generated by DP and initial alignment, we may adopt a sequential search.
+
+That is to say, instead of beginning from the middle residue in $s$. We sequentially select residue $s[1],s[2],s[3]\dots$ (or every several points $s[1],s[9],s[17]\dots$ because we can then avoid the overlapping checking since we adopt a fixed ``window size'' (say 4) and in this way each residue in $t$ will be fixed in some case to check whether we can get a better alignment).
+
+There may be one possible benefit that we may not suffer from inconsistency, since the new DP sequence may only have $8$ more residues which is of a small number compared with the binary search one (in the binary search setting we face only a half number of residues).
+
+%We still have to note that the DP by local alignment is still very powerful, since 
+% End edit to here
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\end{spacing}
+\end{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
