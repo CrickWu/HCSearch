@@ -2,6 +2,7 @@
 *.o
 *.d
 *.swp
+*.log
 
 # texts and executables
 *.txt
@@ -15,6 +16,13 @@
 # subdirectories
 required_tgt/
 required_tpl/
+tail_epad/
+correct_constraints/
+seq-temp-pro/
+calcfeature/
+backfiles/
+train_constraints/
+train_constraints_90/
 
 # documents
 doc/
@@ -22,8 +30,18 @@ doc/
 
 # zip files
 *.zip
+*.tar
+
+# model files
+*.model
+
+# scripts
+*.awk
+*.dat
+*.sh
+*.py
 
 # miscs
 tags
 tag
-*.py
+
