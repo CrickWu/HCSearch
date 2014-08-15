@@ -39,4 +39,7 @@ class TEMPLATE : public PROFILE
 	TEMPLATE(string templateName,string root=".",int LoadOrig=0);
 	~TEMPLATE(void);
 	float DistOf2AAs(int i, int j, int type);
+	//--- epad related ---//__140810__//
+	double **dis_matrix;
+	void Compute_All_Distance(void);
 };

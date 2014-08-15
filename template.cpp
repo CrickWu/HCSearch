@@ -17,17 +17,43 @@ TEMPLATE::TEMPLATE(string tempName,string root,int LoadOrig)
 	length=0;        //inner length=0;
 	WantOriginal=LoadOrig;
 	ReadFeatures_TPL(root + "/" + tempName + ".tpl");
+	dis_matrix=0;
 }
 TEMPLATE::~TEMPLATE(void)
 {
 	if(length!=0)Template_Delete_Matrix(length);
+	if(dis_matrix!=0)DeleteArray2D_(&dis_matrix,length);
 }
 
 float TEMPLATE::DistOf2AAs(int i, int j, int type)
 {
-	if(isMissing[i]==0 && isMissing[j]==0)return sqrt((CA[i][0]-CA[j][0])*(CA[i][0]-CA[j][0]) + (CA[i][1]-CA[j][1])*(CA[i][1]-CA[j][1]) + (CA[i][2]-CA[j][2])*(CA[i][2]-CA[j][2]));
+	if(isMissing[i]==0 && isMissing[j]==0)
+	{
+		return sqrt((CA[i][0]-CA[j][0])*(CA[i][0]-CA[j][0]) + (CA[i][1]-CA[j][1])*(CA[i][1]-CA[j][1]) + (CA[i][2]-CA[j][2])*(CA[i][2]-CA[j][2]));
+	}
 	return 8;
 }
+
+//----- epad related ---//__140810__//
+void TEMPLATE::Compute_All_Distance(void)
+{
+	//create
+	if(dis_matrix==0)NewArray2D_(&dis_matrix,length,length);
+	for(int i=0;i<length;i++)for(int j=0;j<length;j++)dis_matrix[i][j] = 0;
+	//calculate
+	for(int i=0;i<length;i++)
+	{
+		for(int j=i+1;j<length;j++)
+		{
+			if(isMissing[i]==0 && isMissing[j]==0)
+			{
+				dis_matrix[i][j] = DistOf2AAs(i,j,2);
+				dis_matrix[j][i] = dis_matrix[i][j];
+			}
+		}
+	}
+}
+
 
 //---------- create & delete --------//
 void TEMPLATE::Template_Create_Matrix(int length)

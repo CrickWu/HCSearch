@@ -28,12 +28,9 @@ void SEQUENCE::Read_distance_file(string filename)
 {
 	//create
 	if(pair_dis==0)NewArray3D_(&pair_dis,length,length,12);
-//	double Rg = 2.2*pow((double)length,0.38);
-//	double last_dis = 15;
 	for(int i=0;i<length;i++)for(int j=0;j<length;j++)for(int k=0;k<12;k++)pair_dis[i][j][k] = -1;
 	//init
 	int pair_count = 0;
-//	int less_than_8=0;
 	char buf[40960];
 	ifstream fea_in(filename.c_str());
 	//read
@@ -44,22 +41,20 @@ void SEQUENCE::Read_distance_file(string filename)
 	}
 	//process
 	int index1,index2;
-	double dis_prob[13],temp_dis=-1,sum_dis=0,max_dis=0;
+	double dis_prob[12],temp_dis=-1,sum_dis=0,max_dis=0;
 	max_energy=0,min_energy=0;
 	while(fea_in.getline(buf,40960))
 	{
-		sscanf(buf,"%d %d %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf",
+		sscanf(buf,"%d %d %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf",
 			&index1,&index2,&dis_prob[0],&dis_prob[1],&dis_prob[2],&dis_prob[3],&dis_prob[4],&dis_prob[5],
-			&dis_prob[6],&dis_prob[7],&dis_prob[8],&dis_prob[9],&dis_prob[10],&dis_prob[11],&dis_prob[12]);
+			&dis_prob[6],&dis_prob[7],&dis_prob[8],&dis_prob[9],&dis_prob[10],&dis_prob[11]);
 		pair_count++;
 		sum_dis = 0; temp_dis = -1; max_dis =0;
-		for(int i=0;i<13;i++)
+		for(int i=0;i<12;i++)
 		{
 			if(dis_prob[i]==0) dis_prob[i] = 0.01;
-			//pair_dis[index1][index2][i] = log(0.01*dis_prob[i]/referenceState(i+4.5,Rg,last_dis));
-			//pair_dis[index1][index2][i] = 0.01*dis_prob[i];
-			pair_dis[index1-1][index2-1][i] = dis_prob[i];
-			pair_dis[index2-1][index1-1][i] = pair_dis[index1-1][index2-1][i];
+			pair_dis[index1][index2][i] = 0.01*dis_prob[i];
+			pair_dis[index2][index1][i] = pair_dis[index1][index2][i];
 		}
 	}
 	fea_in.close();

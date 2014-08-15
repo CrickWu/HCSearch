@@ -3,7 +3,8 @@
 ################################################################################
 
 # All of the sources participating in the build are defined here
--include subdir.mk
+include subdir.mk
+include ./sofia-ml/sofia.mk
 
 # Add inputs and outputs from these tool invocations to the build variables 
 
@@ -21,7 +22,7 @@ CNFalign: $(OBJS) $(USER_OBJS)
 
 # Other Targets
 clean:
-	-$(RM) $(OBJS)$(C++_DEPS)$(C_DEPS)$(CC_DEPS)$(CPP_DEPS)$(EXECUTABLES)$(CXX_DEPS)$(C_UPPER_DEPS) CNFalign
+	-$(RM) $(OBJS)$(C++_DEPS)$(C_DEPS)$(CC_DEPS)$(CPP_DEPS)$(EXECUTABLES)$(CXX_DEPS)$(C_UPPER_DEPS)
 	-@echo ' '
 
 .PHONY: all clean dependents

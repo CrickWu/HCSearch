@@ -126,6 +126,13 @@ const int AA1Coding[21]={0,4,3,6,13,7,8,9,11,10,12,2,14,5,1,15,16,19,17,18,20};
 //AA3Coding
 //char* const AA3Coding[26]={"ALA","XXX","CYS","ASP","GLU","PHE","GLY","HIS","ILE","XXX","LYS","LEU","MET","ASN","XXX","PRO","GLN","ARG","SER","THR","XXX","VAL","TRP","XXX","TYR","XXX"};
 
+//------ additional data ------//
+const float HMMNull[21]={3706,5728,4211,4064,4839,3729,4763,4308,4069,3323,5509,4640,4464,4937,4285,4423,3815,3783,6325,4665,0};
+// all of these has been defined in CNFalign_Basic
+//const double PSM_aver[21]={6.4661,13.0051,11.824,13.9727,25.1246,11.04,11.2611,16.757,14.2443,13.6784,14.1105,10.9099,12.1047,17.5259,19.3949,7.7492,7.6928,27.4168,15.3683,10.9346,0};
+//to obtain the alphabetical order from the three letter code order, use AA2SUB[ ThreeLetterOrder[i]-'A' ] where i is the order by the three letter code
+//const char ThreeLetterOrder[21]={'A','R','N','D','C','Q','E','G','H','I','L','K','M','F','P','S','T','W','Y','V','Z'};
+
 
 //========= class PROFILE ========//
 //[note]: read in PSM,PSP and HMM
@@ -156,3 +163,4 @@ class PROFILE
 	PROFILE(void);
 	~PROFILE(void);
 };
+

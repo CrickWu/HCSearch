@@ -18,8 +18,16 @@ CPP_SRCS += \
 ./hhpred_hit.cpp \
 ./CNFalign_Util.cpp \
 ./CNF_constants.cpp \
-./hcsearch.cpp 
-#./CNFalign.cpp 
+./CalcFeatures_HCsearch.cpp \
+./CalcFeatures_HCsearch_Reduc.cpp \
+./Computation_Utility.cpp \
+./XYZ.cpp \
+./Kabsch.cpp \
+./TM_score.cpp \
+./uGDT_Calc.cpp \
+./hcsearch.cpp
+#./CNFalign.cpp \
+$(wildcard *.cpp)
 
 OBJS += \
 ./ScoreMatrix.o \
@@ -36,8 +44,16 @@ OBJS += \
 ./hhpred_hit.o \
 ./CNFalign_Util.o \
 ./CNF_constants.o \
+./CalcFeatures_HCsearch.o \
+./CalcFeatures_HCsearch_Reduc.o \
+./Computation_Utility.o \
+./XYZ.o \
+./Kabsch.o \
+./TM_score.o \
+./uGDT_Calc.o \
 ./hcsearch.o
-#./CNFalign.o
+#./CNFalign.o \
+$(CPP_SRCS:%.cpp=%.o)
 
 CPP_DEPS += \
 ./ScoreMatrix.d \
@@ -54,9 +70,16 @@ CPP_DEPS += \
 ./hhpred_hit.d \
 ./CNFalign_Util.d \
 ./CNF_constants.d \
-./hcsearch.o \
+./CalcFeatures_HCsearch.d \
+./CalcFeatures_HCsearch_Reduc.d \
+./Computation_Utility.d \
+./XYZ.d \
+./Kabsch.d \
+./TM_score.d \
+./uGDT_Calc.d \
 ./hcsearch.d
-#./CNFalign.d
+#./CNFalign.d \
+$(CPP_SRCS:%.cpp=%.d)
 
 # Each subdirectory must supply rules for building sources it contributes
 %.o: ./%.cpp
@@ -64,5 +87,3 @@ CPP_DEPS += \
 	g++ -O3 -static -ffast-math -c -fmessage-length=0 -fno-strict-aliasing -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o"$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
-
-
