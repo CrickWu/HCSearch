@@ -11,6 +11,7 @@
 
 // sofia-ml includes
 #include "sofia-ml/sofia-ml-methods.h"
+#include "floatfann.h"
 
 typedef double (*lossfunc) (vector<pair<int, int> >);
 enum task_type {TRAIN = 1, PREDICT = 2};
@@ -64,6 +65,7 @@ class HCSearch {
 		bool reduced;
 	private:
 		SfWeightVector* w;
+        fann* net;
 		ofstream out_train, out_test;
 		task_type task;
 		// 0 - nothing, 1 - intermediate candidate, 2 - layer info

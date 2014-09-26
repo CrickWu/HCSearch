@@ -2,7 +2,6 @@
 #include "CalcFeatures_HCsearch.h"
 #include "CalcFeatures_HCsearch_Reduc.h"
 #include <assert.h>
-
 using namespace std;
 
 void printPair(vector<pair<int, int> > &alignment) {
@@ -171,7 +170,9 @@ int HCSearch::common_pairs(const vector<pair<int, int> > &align1, const vector<p
 
 //from sofia-ml LoadModelFromFile
 void HCSearch::load_model(const string& file_name) {
-	if (w != NULL) {
+
+    net = fann_create_from_file(file_name.c_str());
+	/*if (w != NULL) {
 		delete w;
 	}
 
@@ -188,7 +189,8 @@ void HCSearch::load_model(const string& file_name) {
 	model_stream.close();
 	std::cerr << "   Done." << std::endl;
 	w = new SfWeightVector(model_string);
-	assert(w != NULL);
+	assert(w != NULL);*/
+    
 }
 
 //TODO ??? complete with given modules
@@ -197,13 +199,20 @@ void HCSearch::generate_features(vector<pair<int, int> >&alignment, vector<doubl
 }
 
 double HCSearch::loaded_loss_func(vector<double> &features) {
-	// use the bias bit
-	ostringstream tmp_stream;
+
+	vector<fann_type> input;
+    for (int i = 0; i < features.size(); i++) input.push_back(features[i]);    
+   
+    fann_type *calc_out = fann_run(net, &input[0]);
+    return calc_out[0] * 100;
+    
+    // use the bias bit
+	/*ostringstream tmp_stream;
 	string str;
 	output_layer_training(0, features, 0, 0, tmp_stream);
 	str = tmp_stream.str();
-	SfSparseVector sf_features(str.c_str(), 1);
-	return sofia_ml::SingleSvmPrediction(sf_features, *w);
+	SfSparseVector sf_features(str.c_str(), 1);*/
+	//return sofia_ml::SingleSvmPrediction(sf_features, *w);
 
 }
 
